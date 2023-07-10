@@ -1,0 +1,19 @@
+{# templates/components/ProductSearch.html.twig #}
+
+<div {{ attributes }}>
+    <div>
+        <label for="patientSearchbar">Enter patient Surname or Date of Birth</label>
+        <input
+                id="patientSearchbar"
+                type="search"
+                data-model="query"
+        >
+    </div>
+    <div id="results">
+        <ul>
+            {% for patient in this.patients %}
+                <li><a href="{{ path("patientForm", {"id" : patient.id}) }}">{{ patient.firstName }} {{ patient.surname }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

@@ -39,6 +39,19 @@ class DrugRepository extends ServiceEntityRepository
         }
     }
 
+    public function searchName($name)
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery("
+            SELECT d
+            From App\Entity\Drug d
+            WHERE d.name LIKE :name
+            "
+        )->setParameter("name",$name."%");
+        return $query->getResult();
+    }
+
+
 //    /**
 //     * @return Drug[] Returns an array of Drug objects
 //     */

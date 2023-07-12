@@ -2,4 +2,37 @@
 {% block title %}Patient Form{% endblock %}
 {% block body %}
     {{ form(form) }}
+    <script>
+
+        function getDrug(text)
+        {
+            if(text !== "")
+            {
+                let xhr = new XMLHttpRequest();
+                //let url = "{{ path("getDrug") }}";
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        console.log(xhr.response);
+                    }
+                };
+                xhr.open('GET', "/ajax/drug?name="+text);
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhr.send();
+            }
+        }
+
+        function getPatientDrugHistory()
+        {
+            let xhr = new XMLHttpRequest();
+            let url = "{{ path("getDrugOrder") }}";
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    console.log(xhr.response);
+                }
+            };
+            xhr.open('GET', url+"?id={{ patient.id }}");
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.send();
+        }
+    </script>
 {% endblock %}

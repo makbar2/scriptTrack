@@ -67,15 +67,22 @@ class PatientType extends AbstractType
 
 
             ])
-            ->add("orderInformation",HiddenType::class,[
-                "mapped" => false,
-
-            ])
             ->add("save",SubmitType::class,[
                 "attr" => [
 
                 ],
 
+            ])
+            ->add("orderInformation",HiddenType::class,[
+                "mapped" => false
+            ])//will contain the drug information
+            ->add("name",TextType::class,[
+                "mapped" => false,
+                "label" => "Enter drugs",
+                "attr" =>
+                [
+                    "onkeydown" => "getDrug(this.value)"
+                ]
             ])
         ;
     }

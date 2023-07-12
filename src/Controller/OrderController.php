@@ -9,8 +9,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class OrderController extends AbstractController
 {
     /**
-     *
+     * this controller will run in a seperate thread
+     * this find the orders that need to go out and then send the emaills
      */
+
+
+
+
 
 
 

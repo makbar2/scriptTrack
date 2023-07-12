@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
-
+use function PHPUnit\Framework\throwException;
 
 
 class PatientController extends AbstractController
@@ -29,7 +29,7 @@ class PatientController extends AbstractController
      * @param int|null $id
      * @return Response
      */
-    #[Route("/patient/form/{id}",name: "patientForm")]
+    #[Route("/form/patient/{id}",name: "patientForm")]
     public function patientForm(Request $request,EntityManagerInterface $entityManager,int $id=null ):Response
     {
         if($id != null)
@@ -73,4 +73,16 @@ class PatientController extends AbstractController
 
             ]);
     }
+
+    #[Route("/", name:"testing")]
+    public function test()
+    {
+        return $this->render("test.html.twig");
+    }
+
+
+
+
+
+
 }

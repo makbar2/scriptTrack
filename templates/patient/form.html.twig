@@ -1,38 +1,98 @@
 {% extends 'base.html.twig' %}
 {% block title %}Patient Form{% endblock %}
 {% block body %}
-    {{ form(form) }}
-    <script>
 
+    <div class="row">
+        <div class="col"></div>
+        <div class="col">
+            {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    Patient not found
+                </div>
+            {% endif %}
+            <div>
+                <h1>Please enter patient details</h1>
+            </div>
+            {{ form_start(form) }}
+            <div>
+                {{ form_row(form.firstName) }}
+            </div>
+            <div>
+                {{ form_row(form.surname) }}
+            </div>
+            <div>
+                {{ form_row(form.dob) }}
+            </div>
+            <div>
+                {{ form_row(form.collectionDate) }}
+            </div>
+            <div>
+                {{ form_row(form.orderDate) }}
+            </div>
+            <div>
+                {{ form_row(form.orderFrequency) }}
+            </div>
+            <div>
+                {{ form_row(form.gpEmail) }}
+            </div>
+            <div>
+                {{ form_row(form.orderInformation) }}
+            </div>
+
+            <div>
+                {{ form_row(form.name) }}
+            </div>
+            <div id="selection box">
+                {% for order in orders %}
+                    {{ order }}
+                {% endfor %}
+            </div>
+            <div>
+                {{ form_row(form.save) }}
+            </div>
+            {{ form_end(form) }}
+        </div>
+        <div class="col"></div>
+
+    </div>
+
+    <script>
         function getDrug(text)
         {
             if(text !== "")
             {
                 let xhr = new XMLHttpRequest();
-                //let url = "{{ path("getDrug") }}";
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === XMLHttpRequest.DONE) {
-                        console.log(xhr.response);
+                xhr.onreadystatechange = function()
+                {
+                    if (xhr.readyState === XMLHttpRequest.DONE)
+                    {
+                        let results = JSON.parse(xhr.response);
+                        console.log(results);
+
                     }
                 };
-                xhr.open('GET', "/ajax/drug?name="+text);
+                xhr.open('GET', "/api/drugSuggestion?name="+text);
                 xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
                 xhr.send();
             }
         }
 
-        function getPatientDrugHistory()
+
+        function updateSuggestionBox(item)
         {
-            let xhr = new XMLHttpRequest();
-            let url = "{{ path("getDrugOrder") }}";
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    console.log(xhr.response);
-                }
-            };
-            xhr.open('GET', url+"?id={{ patient.id }}");
-            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            xhr.send();
+            console.log(item)
         }
+
+        function updateHiddenField(item)
+        {
+            /**
+             * there is a hidden field on the form, that will contain the order information when the user presses
+             * submit that hidden field will be processed too. The values of that field need to be updated too what
+             * the user wants the patient to have in their order.
+             */
+
+        }
+
+
     </script>
 {% endblock %}

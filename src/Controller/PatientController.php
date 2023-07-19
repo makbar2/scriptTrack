@@ -4,17 +4,13 @@ namespace App\Controller;
 use App\Entity\Drug;
 use App\Entity\Patient;
 use App\Form\PatientType;
-use Doctrine\ORM\Mapping\Entity;
+use App\Services\OrderService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
-use function PHPUnit\Framework\throwException;
+
 
 
 class PatientController extends AbstractController
@@ -30,16 +26,28 @@ class PatientController extends AbstractController
      * @return Response
      */
     #[Route("/form/patient/{id}",name: "patientForm")]
-    public function patientForm(Request $request,EntityManagerInterface $entityManager,int $id=null ):Response
+    public function patientForm(Request $request,EntityManagerInterface $entityManager,OrderService $orderService,int $id=null ):Response
     {
+        /**
+         * this is a mess idk how to make it better, due to the fact that i some ajax with this form
+         * so i have a hidden field that isnt mapped to patient that will have its data changed based
+         * on the live search for what they want to order
+         * this fucking sucks
+         *
+         */
+        $error = null;
+        $orders = null;
         if($id != null)
         {
+            $patient = $entityManager->getRepository(Patient::class)->find($id);
             try
             {
                 $patient = $entityManager->getRepository(Patient::class)->find($id);
+                $drugs = $orderService->getPatientDrugs($patient);
             }catch(\Exception $e)
             {
                 $patient = new Patient();
+                $error = "no patient found";
             }
         }else
         {
@@ -61,12 +69,14 @@ class PatientController extends AbstractController
         return $this->render("patient/form.html.twig",
             [
                 "form" => $form,
-                "patient"  => $patient
+                "patient"  => $patient,
+                "orders" => $orders,
+                "error" => $error
             ]);
     }
 
     #[Route("patient/search", name:"patientSearch")]
-    public function searchPatient(EntityManagerInterface $entityManager)
+    public function searchPatient(EntityManagerInterface $entityManager):Response
     {
         return $this->render("patient/index.html.twig",
             [
@@ -75,10 +85,18 @@ class PatientController extends AbstractController
     }
 
     #[Route("/", name:"testing")]
-    public function test()
+    public function test(EntityManagerInterface $entityManager,OrderService $orderService)
     {
-        return $this->render("test.html.twig");
+        $patient = $entityManager->getRepository(Patient::class)->find(1);
+        $orderService->processOrder($patient,[1003,1004],$entityManager);
+        return $this->render("test.html.twig",[
+            "patient" => $patient,
+
+        ]);
     }
+
+
+
 
 
 

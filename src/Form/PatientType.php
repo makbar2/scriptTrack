@@ -20,14 +20,14 @@ class PatientType extends AbstractType
         $builder
             ->add('firstName',TextType::class,[
                 "attr" => [
-
+                    "class" => "form-control"
                 ],
 
 
             ])
             ->add('surname',TextType::class,[
                 "attr" => [
-
+                    "class" => "form-control"
                 ],
 
 
@@ -55,21 +55,21 @@ class PatientType extends AbstractType
             ])
             ->add('orderFrequency',IntegerType::class,[
                 "attr" => [
-
+                    "class" => "form-control"
                 ],
 
 
             ])
             ->add('gpEmail',EmailType::class,[
                 "attr" => [
-
+                    "class" => "form-control"
                 ],
 
 
             ])
             ->add("save",SubmitType::class,[
                 "attr" => [
-
+                    "class" => "btn btn-primary"
                 ],
 
             ])
@@ -81,7 +81,8 @@ class PatientType extends AbstractType
                 "label" => "Enter drugs",
                 "attr" =>
                 [
-                    "onkeydown" => "getDrug(this.value)"
+                    "onkeydown" => "getDrug(this.value)",
+                    "class" => "form-control"
                 ]
             ])
         ;
